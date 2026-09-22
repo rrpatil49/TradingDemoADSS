@@ -31,13 +31,18 @@ export const SymbolDetailsScreen: React.FC<Props> = ({ route }) => {
 
     setLoading(true);
     const executionPrice = side === 'BUY' ? currentTick.ask : currentTick.bid;
-    const res = await executeOrder({ symbol, side, quantity: qty, price: executionPrice });
-    setLoading(false);
+    try {
+      const res = await executeOrder({ symbol, side, quantity: qty, price: executionPrice });
 
-    if (res.success) {
-      Alert.alert('Trade Successful', res.message);
-    } else {
-      Alert.alert('Trade Failed', res.message);
+      if (res.success) {
+        Alert.alert('Trade Successful', res.message);
+      } else {
+        Alert.alert('Trade Failed', res.message);
+      }
+    } catch {
+      Alert.alert('Trade Failed', 'Unable to execute the trade. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 

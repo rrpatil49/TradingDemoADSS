@@ -40,19 +40,22 @@ class MockSocketServer {
     if (this.intervalId) return;
     this.intervalId = setInterval(() => {
       this.ticks = this.ticks.map(item => {
-      const delta = (Math.random() - 0.49) * (item.bid * 0.0008);
-      const rawBid = item.bid + delta;
-      const spread = item.ask - item.bid;
+      const bidDelta = (Math.random() - 0.49) * (item.bid * 0.0008);
+      const askDelta = (Math.random() - 0.49) * (item.ask * 0.0008);
+      const rawBid = item.bid + bidDelta;
+      const rawAsk = item.ask + askDelta;
 
       // Use digits to dynamically fix decimal places
       const newBid = Number(rawBid.toFixed(item.digits));
-      const newAsk = Number((newBid + spread).toFixed(item.digits));
+      const newAsk = Number(rawAsk.toFixed(item.digits));
 
       return {
         ...item,
         bid: newBid,
         ask: newAsk,
         direction: newBid >= item.bid ? 'up' : 'down',
+        bidDirection: newBid === item.bid ? 'neutral' : newBid > item.bid ? 'up' : 'down',
+        askDirection: newAsk === item.ask ? 'neutral' : newAsk > item.ask ? 'up' : 'down',
       };
     });
 

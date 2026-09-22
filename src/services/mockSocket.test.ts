@@ -52,4 +52,18 @@ describe('mockSocket', () => {
 
     expect(listener.mock.calls.at(-1)?.[0][0].direction).toBe('down');
   });
+
+  it('calculates bid and ask directions independently', () => {
+    jest.useFakeTimers();
+    jest.spyOn(Math, 'random').mockReturnValueOnce(0.6).mockReturnValueOnce(0);
+    const listener = jest.fn();
+    mockSocket.subscribe(listener);
+    mockSocket.start();
+    jest.advanceTimersByTime(600);
+
+    expect(listener.mock.calls.at(-1)?.[0][0]).toEqual(expect.objectContaining({
+      bidDirection: 'up',
+      askDirection: 'down',
+    }));
+  });
 });

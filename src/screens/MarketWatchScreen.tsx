@@ -9,7 +9,15 @@ import { formatPrice } from '../common/helper';
 type Props = NativeStackScreenProps<RootStackParamList, 'MarketWatch'>;
 
 const SymbolRow = React.memo(({ item, onPress }: { item: SymbolTick; onPress: () => void }) => {
-  const flashColor = item.direction === 'up' ? COLORS.success : item.direction === 'down' ? COLORS.danger : COLORS.neutral;
+  const bidDirection = item.bidDirection ?? item.direction;
+  const askDirection = item.askDirection ?? item.direction;
+  const directionColors = {
+    up: COLORS.success,
+    down: COLORS.danger,
+    neutral: COLORS.neutral,
+  };
+  const bidColor = directionColors[bidDirection];
+  const askColor = directionColors[askDirection];
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
@@ -19,11 +27,11 @@ const SymbolRow = React.memo(({ item, onPress }: { item: SymbolTick; onPress: ()
       </View>
       <View style={styles.priceContainer}>
         <View style={[styles.priceBadge, { flexDirection: 'column', alignItems: 'center' }]}>
-          <Text style={[styles.priceBadge, { backgroundColor: flashColor }]}>{formatPrice(item.bid, item.digits)}</Text>
+          <Text style={[styles.priceBadge, { backgroundColor: bidColor }]}>{formatPrice(item.bid, item.digits)}</Text>
           <Text style={styles.priceLabel}>bid</Text>
         </View>
         <View style={[styles.priceBadge, { flexDirection: 'column', alignItems: 'center' }]}>
-          <Text style={[styles.priceBadge, { backgroundColor: flashColor }]}>{formatPrice(item.ask, item.digits)}</Text>
+          <Text style={[styles.priceBadge, { backgroundColor: askColor }]}>{formatPrice(item.ask, item.digits)}</Text>
           <Text style={styles.priceLabel}>ask</Text>
         </View>
       </View>
@@ -73,6 +81,6 @@ const styles = StyleSheet.create({
   symbolText: { color: COLORS.textPrimary, fontSize: 18, fontWeight: '700' },
   nameText: { color: COLORS.textSecondary, fontSize: 12, marginTop: 2 },
   priceContainer: { flexDirection: 'row', gap: 8 },
-  priceBadge: { paddingHorizontal: 8, paddingVertical: 6, borderRadius: 4 },
+  priceBadge: { paddingHorizontal: 8, paddingVertical: 6, borderRadius: 4, color: COLORS.textPrimary },
   priceLabel: { color: COLORS.textInverse, fontSize: 12, fontWeight: '600' },
 });

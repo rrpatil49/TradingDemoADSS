@@ -111,4 +111,16 @@ describe('SymbolDetailsScreen', () => {
       expect(Alert.alert).toHaveBeenCalledWith('Trade Failed', 'Rejected');
     });
   });
+
+  it('shows a failure alert when the order request is rejected', async () => {
+    (executeOrder as jest.Mock).mockRejectedValue(new Error('Network unavailable'));
+    const result = await render(<SymbolDetailsScreen navigation={navigation} route={route} />);
+
+    await fireEvent.press(result.getByText('BUY @ 1.0844'));
+
+    await waitFor(() => {
+      expect(Alert.alert).toHaveBeenCalledWith('Trade Failed', 'Unable to execute the trade. Please try again.');
+      expect(JSON.stringify(result.toJSON())).not.toContain('ActivityIndicator');
+    });
+  });
 });
