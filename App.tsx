@@ -1,20 +1,28 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { MarketWatchScreen } from './src/screens/MarketWatchScreen';
+import { SymbolDetailsScreen } from './src/screens/SymbolDetailsScreen';
+import { RootStackParamList } from './src/types/trading'
+import { COLORS } from './src/common/colors';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <StatusBar style="light" />
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: COLORS.background },
+          headerTintColor: COLORS.textPrimary,
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}
+      >
+        <Stack.Screen name="MarketWatch" component={MarketWatchScreen} options={{ title: 'Market Watch' }} />
+        <Stack.Screen name="SymbolDetails" component={SymbolDetailsScreen} options={{ title: 'Order Execution' }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
